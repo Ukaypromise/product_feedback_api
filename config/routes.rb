@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :users, path: "api/v1/users",
+  devise_for :users, path: "api/v1/users", path_names: {
+                       registration: "signup",
+                     },
                      controllers: {
                        registrations: "api/v1/users/registrations",
                        sessions: "api/v1/users/sessions",
