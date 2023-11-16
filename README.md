@@ -52,3 +52,13 @@ Add comments and replies to a product feedback request.
 - We will be using the Devise gem for authentication. This will allow us to easily add authentication to our API.
 - We will be generating custom controllers for Devise. This will allow us to customize the behavior of the Devise controllers.
 ```rails g devise:controllers api/v1/users -c sessions registrations```
+
+
+## Your users should be able to:
+
+- Create, read, update, and delete product feedback requests
+- Receive form validations when trying to create/edit feedback requests
+- Sort suggestions by most/least upvotes and most/least comments
+- Filter suggestions by category
+- Add comments and replies to a product feedback request.(Users can comment under a comment, nested     comments)
+- Upvote product feedback requests

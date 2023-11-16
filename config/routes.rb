@@ -11,6 +11,9 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: :json } do
     namespace :v1 do
+      namespace :users do
+        get '/user_details' => 'current_user#index'
+      end
     end
   end
 end
