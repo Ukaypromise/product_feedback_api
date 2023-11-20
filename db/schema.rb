@@ -10,9 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2023_11_20_100428) do
+ActiveRecord::Schema[7.1].define(version: 2023_11_20_144317) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "comments", force: :cascade do |t|
+    t.text "body"
+    t.bigint "user_id", null: false
+    t.bigint "feedback_request_id", null: false
+    t.bigint "parent_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feedback_request_id"], name: "index_comments_on_feedback_request_id"
+    t.index ["parent_id"], name: "index_comments_on_parent_id"
+    t.index ["user_id"], name: "index_comments_on_user_id"
+  end
 
   create_table "companies", force: :cascade do |t|
     t.string "name"
@@ -21,6 +33,17 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_20_100428) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_companies_on_user_id"
+  end
+
+  create_table "feedback_requests", force: :cascade do |t|
+    t.string "title"
+    t.text "description"
+    t.bigint "product_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["product_id"], name: "index_feedback_requests_on_product_id"
+    t.index ["user_id"], name: "index_feedback_requests_on_user_id"
   end
 
   create_table "products", force: :cascade do |t|
@@ -47,6 +70,21 @@ ActiveRecord::Schema[7.1].define(version: 2023_11_20_100428) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "votes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "feedback_request_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["feedback_request_id"], name: "index_votes_on_feedback_request_id"
+    t.index ["user_id"], name: "index_votes_on_user_id"
+  end
+
+  add_foreign_key "comments", "feedback_requests"
+  add_foreign_key "comments", "users"
   add_foreign_key "companies", "users"
+  add_foreign_key "feedback_requests", "products"
+  add_foreign_key "feedback_requests", "users"
   add_foreign_key "products", "companies"
+  add_foreign_key "votes", "feedback_requests"
+  add_foreign_key "votes", "users"
 end
