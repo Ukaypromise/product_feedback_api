@@ -14,7 +14,9 @@ Rails.application.routes.draw do
       namespace :users do
         get '/user_details' => 'current_user#index'
       end
-      resources :companies
+      resources :companies do
+        resources :products
+      end
     end
   end
 end

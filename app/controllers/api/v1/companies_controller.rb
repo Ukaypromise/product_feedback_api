@@ -1,7 +1,9 @@
 class Api::V1::CompaniesController < ApplicationController
   def index
     @companies = Company.all
-    render json: @companies
+    render json: {
+      data: @companies
+    }
   end
 
   def create
