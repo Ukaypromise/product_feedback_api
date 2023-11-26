@@ -1,9 +1,9 @@
 class Api::V1::CompaniesController < ApplicationController
   def index
-    @companies = Company.order(created_at: :desc)
+    @companies = Company.includes(:user).order(created_at: :desc)
     render json: {
-      data: @companies
-    }
+             data: @companies.map { |company| { company: company, user: company.user, } },
+           }
   end
 
   def create
@@ -15,7 +15,7 @@ class Api::V1::CompaniesController < ApplicationController
       }, status: :created
     else
       render json: {
-               status: { message: "Company couldn't be created successfully."},
+               status: { message: "Company couldn't be created successfully." },
                errors: @company.errors.full_messages.to_sentence,
                status: :unprocessable_entity,
              }
@@ -40,7 +40,7 @@ class Api::V1::CompaniesController < ApplicationController
       }, status: :created
     else
       render json: {
-               status: { message: "Company couldn't be updated successfully."},
+               status: { message: "Company couldn't be updated successfully." },
                errors: @company.errors.full_messages.to_sentence,
                status: :unprocessable_entity,
              }
@@ -58,7 +58,7 @@ class Api::V1::CompaniesController < ApplicationController
       }, status: :created
     else
       render json: {
-               status: { message: "Company couldn't be deleted successfully."},
+               status: { message: "Company couldn't be deleted successfully." },
                errors: @company.errors.full_messages.to_sentence,
                status: :unprocessable_entity,
              }

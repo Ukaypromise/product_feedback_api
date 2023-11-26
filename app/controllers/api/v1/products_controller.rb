@@ -7,6 +7,15 @@ class Api::V1::ProductsController < ApplicationController
            }
   end
 
+  def get_all_products
+    @products = Product.includes(:company).order(created_at: :desc)
+    render json: {
+             data: @products.map { |product|
+               { product: product, company: product.company }
+             },
+           }
+  end
+
   def create
     @product = current_user.companies.find(params[:company_id]).products.build(product_params)
 
@@ -37,7 +46,7 @@ class Api::V1::ProductsController < ApplicationController
       render json: {
         status: { code: 200, message: "Product updated sucessfully." },
         data: ProductSerializers.new(@product).serializable_hash,
-      }, status: :created
+      }, status: :ok
     else
       render json: {
                status: { message: "Product couldn't be updated successfully." },
@@ -54,7 +63,7 @@ class Api::V1::ProductsController < ApplicationController
       render json: { error: "Not authorized" }, status: :unauthorized
     elsif @product.destroy
       render json: {
-        status: { code: 200, message: "Product deleted sucessfully." },
+        message: "Product deleted sucessfully.",
         data: ProductSerializers.new(@product).serializable_hash,
       }, status: :created
     else
