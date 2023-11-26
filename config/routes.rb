@@ -15,8 +15,14 @@ Rails.application.routes.draw do
         get '/user_details' => 'current_user#index'
       end
       resources :companies do
-        resources :products
+        resources :products do
+          resources :feedback_requests, only: [:index, :show, :create, :update, :destroy] do
+            resources :comments, only: [:index, :create, :update, :destroy]
+            resources :votes, only: [:create, :destroy]
+          end
+        end
       end
+      get '/products' => 'products#get_all_products'
     end
   end
 end

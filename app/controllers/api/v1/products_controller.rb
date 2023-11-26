@@ -7,6 +7,17 @@ class Api::V1::ProductsController < ApplicationController
            }
   end
 
+  def get_all_products
+    @products = Product.includes(:company).order(created_at: :desc)
+    render json: {
+             data: @products.map { |product| { product: product, company: product.company } },
+           }
+
+    # render json: {
+    #          data: @products
+    #        }
+  end
+
   def create
     @product = current_user.companies.find(params[:company_id]).products.build(product_params)
 
