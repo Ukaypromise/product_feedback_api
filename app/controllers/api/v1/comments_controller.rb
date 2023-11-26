@@ -7,32 +7,56 @@ class Api::V1::CommentsController < ApplicationController
            }
   end
 
-  
-
   def create
     @feedback_request = FeedbackRequest.find(params[:feedback_request_id])
     @comment = @feedback_request.comments.build(comment_params.merge(user: current_user))
 
     if @comment.save
-      render json: @comment, status: :created
+      render json: {
+               message: "Comment created sucessfully.",
+               data: @comment,
+               status: :created,
+             }
     else
-      render json: @comment.errors, status: :unprocessable_entity
+      render json: {
+               message: "Comment couldn't be created successfully.",
+               data: @comment.errors,
+               status: :unprocessable_entity,
+             }
     end
   end
 
   def update
     @comment = Comment.find(params[:id])
 
-    if @comment.update(comment_params)
-      render json: @comment, status: :ok
+    if @comment.user_id != current_user.id
+      render json: { error: "Not authorized" }, status: :unauthorized
+    elsif @comment.update(comment_params)
+      render json: { message: "Comment updated sucessfully.",
+                     data: @comment, status: :ok }
     else
-      render json: @comment.errors, status: :unprocessable_entity
+      render json: {
+               status: { message: "Comment couldn't be updated successfully." },
+               errors: @comment.errors.full_messages,
+               status: :unprocessable_entity,
+             }
     end
   end
 
   def destroy
     @comment = Comment.find(params[:id])
-    @comment.destroy
+    if @comment.user_id != current_user.id
+      render json: { error: "Not authorized" }, status: :unauthorized
+    elsif @comment.destroy
+      render json: { message: "Comment deleted sucessfully.",
+                     data: @comment, status: :ok }
+    else
+      render json: {
+               status: { message: "Comment couldn't be deleted successfully." },
+               errors: @comment.errors.full_messages,
+               status: :unprocessable_entity,
+             }
+    end
   end
 
   private
