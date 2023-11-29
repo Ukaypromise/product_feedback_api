@@ -38,6 +38,9 @@ gem "rack-cors"
 gem "devise"
 gem "devise-jwt"
 # gem "fast_jsonapi"
+
+gem 'kaminari'
+
 gem "active_model_serializers"
 
 group :development, :test do

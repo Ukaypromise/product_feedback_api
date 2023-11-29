@@ -2,7 +2,7 @@ class Api::V1::FeedbackRequestsController < ApplicationController
   before_action :set_product, only: [:index, :create]
 
   def index
-    @feedback_requests = @product.feedback_requests
+    @feedback_requests = @product.feedback_requests.recent.page(params[:page]).per(params[:per_page])
     render json: {
              data: @feedback_requests,
            }
