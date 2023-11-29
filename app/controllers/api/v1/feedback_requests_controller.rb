@@ -54,10 +54,9 @@ class Api::V1::FeedbackRequestsController < ApplicationController
     @feedback_request = FeedbackRequest.find(params[:id])
     if @feedback_request.user_id != current_user.id
       render json: { error: "Not authorized" }, status: :unauthorized
-    elsif
-    @feedback_request.destroy
+    elsif @feedback_request.destroy
       render json: { message: "Feedback deleted sucessfully.",
-                      data: @feedback_request, status: :ok }
+                     data: @feedback_request, status: :ok }
     else
       render json: {
                status: { message: "Feedback couldn't be deleted successfully." },
